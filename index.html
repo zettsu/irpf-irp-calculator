@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Impuestos</title>
+  <title>Calculadora de Impuestos irpf vs irp</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
   <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-    <h1 class="text-2xl font-bold text-center mb-6">Calculadora de Impuestos</h1>
+    <h1 class="text-2xl font-bold text-center mb-6">Calculadora de Impuestos irpf vs irp </h1>
     
     <!-- Entrada de sueldo nominal -->
     <div class="mb-4">
@@ -65,10 +65,22 @@
 
       // Cálculo de IRP
       const bpc = 14006; // Base de Prestaciones y Contribuciones
-      const tramo1 = bpc * 6 / 100; // Hasta 70 BPC
-      const tramo2 = (20008 - 14006) * 12 * 0.1; // Entre 70 y 100 BPC
-      const tramo3 = (baseImponible > 20008 ? baseImponible - total *100
+      const tramo1 = Math.min(baseImponible, bpc * 70) * 0.06;
+      const tramo2 = Math.min(Math.max(baseImponible - bpc * 70, 0), bpc * 30) * 0.1;
+      const tramo3 = Math.max(baseImponible - bpc * 100, 0) * 0.12;
+      const irp = tramo1 + tramo2 + tramo3;
 
+      // Salarios líquidos
+      const liquidIprf = baseImponible - iprf;
+      const liquidIrp = baseImponible - irp;
+
+      // Mostrar resultados
+      document.getElementById("results").classList.remove("hidden");
+      document.getElementById("iprf").textContent = iprf.toFixed(2);
+      document.getElementById("irp").textContent = irp.toFixed(2);
+      document.getElementById("liquid-iprf").textContent = liquidIprf.toFixed(2);
+      document.getElementById("liquid-irp").textContent = liquidIrp.toFixed(2);
+    });
   </script>
 </body>
 </html>
